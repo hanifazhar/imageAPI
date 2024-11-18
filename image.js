@@ -9,7 +9,8 @@ module.exports = {
             const query = 'select * from imagestable'    
             let data = await request.query(query)
             res.status(200).json({
-                status: 200,
+                "success": true,
+                "message": "Sukses menampilkan seluruh gambar",
                 data: data[0]
             })
         } catch (err) {
@@ -24,7 +25,8 @@ module.exports = {
             const query = `insert into imagestable (id, url) values (uuid(), "${pathImg}")`   
             let data = await request.query(query)
             res.status(201).json({
-                status: 201,
+                "success": true,
+                "message": "Sukses menambahkan gambar",
                 data: data[0]
             })
         } catch (error) {
@@ -35,7 +37,15 @@ module.exports = {
         try {
             const { nama } = req.query;
             let pathImg = `D:/Kuliah/SMT 5/Bangkit/ngoding/imageAPI/assets/${nama}`
-            res.sendFile(pathImg)
+            res.sendFile(pathImg, (err) => {
+                if (err) {
+                    console.log(error)
+                }
+                res.status(201).json({
+                    "success": true,
+                    "message": "Sukses menampilkan gambar gambar",
+                })
+            })
         } catch (error) {
             console.log(error)
         }

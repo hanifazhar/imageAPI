@@ -35,19 +35,34 @@ module.exports = {
     },
     getFile: async (req, res) => {
         try {
-            const { nama } = req.query;
-            let pathImg = `D:/Kuliah/SMT 5/Bangkit/ngoding/imageAPI/assets/${nama}`
+            const { id } = req.query; // Ambil ID dari query
+            const request = await db.promise();
+            const query = `SELECT url FROM imagestable WHERE id = ?`;
+            let [data] = await request.query(query, [id]);
+
+            if (data.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Gambar tidak ditemukan",
+                });
+            }
+
+            const pathImg = data[0].url; // URL dari database
             res.sendFile(pathImg, (err) => {
                 if (err) {
-                    console.log(error)
+                    console.error(err);
+                    res.status(500).json({
+                        success: false,
+                        message: "Gagal menampilkan gambar",
+                    });
                 }
-                res.status(201).json({
-                    "success": true,
-                    "message": "Sukses menampilkan gambar gambar",
-                })
-            })
+            });
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            res.status(500).json({
+                success: false,
+                message: "Terjadi kesalahan",
+            });
         }
-    }
+    },
 }

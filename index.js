@@ -1,10 +1,12 @@
 const express = require('express');
 const { upload } = require('./middleware/middleware.js');
 const { postImage, getImages, getFile } = require("./image.js")
+const cors = require("cors")
 
 const router = express.Router();
 const app = express();
 
+app.use(cors())
 app.use("/", router);
 
 router.get("/", (req, res) => {
